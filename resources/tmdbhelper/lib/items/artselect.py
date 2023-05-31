@@ -4,8 +4,6 @@ from tmdbhelper.lib.api.fanarttv.api import ARTWORK_TYPES
 from tmdbhelper.lib.api.tmdb.mapping import get_imagepath_poster, get_imagepath_fanart, get_imagepath_thumb, get_imagepath_logo
 from tmdbhelper.lib.addon.dialog import BusyDialog
 from tmdbhelper.lib.addon.plugin import get_localized, executebuiltin
-from tmdbhelper.lib.addon.tmdate import set_timestamp
-from jurialmunkey.window import get_property
 
 
 class _ArtworkSelector():
@@ -58,7 +56,7 @@ class _ArtworkSelector():
         if not artwork_type:
             if container_refresh:
                 executebuiltin('Container.Refresh')
-                get_property('Widgets.Reload', set_property=f'{set_timestamp(0, True)}')
+                executebuiltin('UpdateLibrary(video,/fake/path/to/force/refresh/on/home)')
             return
 
         # Get artwork of type and build list
@@ -112,7 +110,7 @@ class _ArtworkSelector():
         # Refresh container to display new artwork
         if container_refresh:
             executebuiltin('Container.Refresh')
-            get_property('Widgets.Reload', set_property=f'{set_timestamp(0, True)}')
+            executebuiltin('UpdateLibrary(video,/fake/path/to/force/refresh/on/home)')
         self.ftv_api.cache_refresh = old_cache_refresh  # Set it back to previous setting
 
     def manage_artwork(self, tmdb_id=None, tmdb_type=None, season=None):
