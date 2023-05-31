@@ -5,7 +5,7 @@
             <group id="1" label="248">
                 <setting id="mpaa_prefix" type="string" label="32004" help="32418">
                     <level>0</level>
-                    <default>Rated</default>
+                    <default></default>
                     <constraints>
                         <allowempty>true</allowempty>
                     </constraints>
@@ -101,14 +101,14 @@
             <group id="2" label="32367">
                 <setting id="local_db" type="boolean" label="32038" help="">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
             </group>
             <group id="3" label="32401">
                 <setting id="tmdb_details" type="boolean" label="32402" help="">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="artwork_quality" type="integer" label="32420" help="">
