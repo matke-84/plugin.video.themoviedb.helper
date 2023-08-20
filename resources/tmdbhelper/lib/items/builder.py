@@ -2,7 +2,7 @@ import re
 from tmdbhelper.lib.items.artselect import _ArtworkSelector
 from tmdbhelper.lib.addon.plugin import get_setting
 from tmdbhelper.lib.items.listitem import ListItem
-from tmdbhelper.lib.files.bcache import BasicCache
+from tmdbhelper.lib.files.bcache import BasicCacheMem
 from tmdbhelper.lib.api.tmdb.api import TMDb
 from tmdbhelper.lib.api.fanarttv.api import FanartTV
 from tmdbhelper.lib.addon.tmdate import set_timestamp, get_timestamp
@@ -44,7 +44,7 @@ class ItemBuilder(_ArtworkSelector):
         self.tmdb_api = tmdb_api or TMDb()
         self.ftv_api = ftv_api or FanartTV()
         self.trakt_api = trakt_api
-        self._cache = BasicCache(filename='ItemBuilder.db')
+        self._cache = BasicCacheMem(filename='ItemBuilder.db')
         self._regex = re.compile(r'({})'.format('|'.join(IMAGEPATH_ALL)))
         self.parent_params = None
         self.cache_only = cache_only
@@ -265,7 +265,7 @@ class ItemBuilder(_ArtworkSelector):
     def get_listitem(self, i, use_iterprops=True):
         li = ListItem(parent_params=self.parent_params, **i)
         mediatype = li.infolabels.get('mediatype')
-        tmdb_type = li.get_tmdb_type()
+        tmdb_type = li.tmdb_type
         tmdb_id = li.unique_ids.get('tvshow.tmdb') if mediatype in ['season', 'episode'] else li.unique_ids.get('tmdb')
         season = li.infolabels.get('season', 0) if mediatype in ['season', 'episode'] else None
         episode = li.infolabels.get('episode') if mediatype == 'episode' else None
