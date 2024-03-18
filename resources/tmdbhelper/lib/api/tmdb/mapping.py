@@ -203,7 +203,7 @@ def get_extra_art(v):
         landscape = sorted(landscape, key=lambda i: i.get('vote_average', 0), reverse=True)
         artwork['landscape'] = get_imagepath_thumb(landscape[0].get('file_path'))
 
-    clearlogo = [i for i in v.get('logos', []) if i.get('file_path', '')[-4:] != '.svg']
+    clearlogo = [i for i in v.get('logos', []) if i.get('iso_639_1', '')[-4:] != '.svg']
     if clearlogo:
         clearlogo = sorted(clearlogo, key=lambda i: i.get('vote_average', 0), reverse=True)
         artwork['clearlogo'] = get_imagepath_logo(clearlogo[0].get('file_path'))
