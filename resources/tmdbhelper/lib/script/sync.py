@@ -1,6 +1,7 @@
 # Module: default
 # Author: jurialmunkey
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
+import xbmc
 from xbmcgui import Dialog
 from tmdbhelper.lib.addon.tmdate import set_timestamp
 from tmdbhelper.lib.addon.thread import ParallelThread
@@ -12,6 +13,8 @@ from tmdbhelper.lib.api.trakt.api import TraktAPI
 from tmdbhelper.lib.update.userlist import get_monitor_userlists
 from tmdbhelper.lib.update.library import add_to_library
 
+THUMBSUP_VALUE_SETTING_ID = 'ThumbsUpRateValue'
+THUMBSDOWN_VALUE_SETTING_ID = 'ThumbsDownRateValue'
 
 def _menu_item_watchlist():
     return {
@@ -84,6 +87,15 @@ def _menu_item_comments():
 
 def _menu_item_rating():
     return {'class': _Rating}
+    
+def _menu_item_like():
+    return {'class': _Like} 
+
+def _menu_item_dislike():
+    return {'class': _Dislike} 
+
+def _menu_item_reset():
+    return {'class': _Reset}    
 
 
 def _menu_items():
@@ -124,7 +136,10 @@ def sync_trakt_item(trakt_type, unique_id, season=None, episode=None, id_type=No
         'comments': lambda: [_menu_item_comments()],
         'userlist': lambda: [_menu_item_userlist()],
         'progress': lambda: [_menu_item_progress()],
-        'rating': lambda: [_menu_item_rating()]}
+        'rating': lambda: [_menu_item_rating()],
+        'like': lambda: [_menu_item_like()],
+        'dislike': lambda: [_menu_item_dislike()],
+        'reset': lambda: [_menu_item_reset()]}
 
     try:
         items = route[sync_type]()
@@ -397,3 +412,147 @@ class _Rating():
                 postdata={f'{self._item.trakt_type}s': [item]}
             )
         return self._sync
+        
+class _Like():
+    def __init__(self, item, **kwargs):
+        self._item, self._trakt = item, item._trakt
+        set_kwargattr(self, kwargs)
+
+    def _getself(self):
+        """ Method to see if we should return item in menu or not """
+        rating = self._trakt.is_sync(
+            self._item.trakt_type, self._item.unique_id, self._item.season, self._item.episode,
+            self._item.id_type, 'ratings')
+
+        if not rating:
+            self.name = get_localized(32485)
+        else:
+            self.name = f'{get_localized(32489)} ({rating.get("rating")})'
+
+        return self
+
+    def sync(self):
+        # Get base item definition from Trakt
+        with BusyDialog():
+            item = self._trakt.get_sync_item(
+                self._item.trakt_type, self._item.unique_id, self._item.id_type,
+                self._item.season, self._item.episode)
+        if not item:
+            return
+        # Ask user for rating
+        try:
+            x = int(xbmc.getInfoLabel("Skin.String(%s)" % THUMBSUP_VALUE_SETTING_ID))
+        except ValueError:
+            self._sync = -1
+            return
+
+        if x < 0 or x > 10:
+            self._sync = -1
+            return
+
+        item['rating'] = x
+
+        # Sync rating
+        with BusyDialog():
+            self._sync = self._trakt.post_response(
+                'sync',
+                'ratings/remove' if x == 0 else 'ratings',
+                postdata={f'{self._item.trakt_type}s': [item]}
+            )
+        return self._sync 
+        
+class _Dislike():
+    def __init__(self, item, **kwargs):
+        self._item, self._trakt = item, item._trakt
+        set_kwargattr(self, kwargs)
+
+    def _getself(self):
+        """ Method to see if we should return item in menu or not """
+        rating = self._trakt.is_sync(
+            self._item.trakt_type, self._item.unique_id, self._item.season, self._item.episode,
+            self._item.id_type, 'ratings')
+
+        if not rating:
+            self.name = get_localized(32485)
+        else:
+            self.name = f'{get_localized(32489)} ({rating.get("rating")})'
+
+        return self
+        
+    def sync(self):
+        # Get base item definition from Trakt
+        with BusyDialog():
+            item = self._trakt.get_sync_item(
+                self._item.trakt_type, self._item.unique_id, self._item.id_type,
+                self._item.season, self._item.episode)
+        if not item:
+            return
+        # Ask user for rating
+        try:
+            x = int(xbmc.getInfoLabel("Skin.String(%s)" % THUMBSDOWN_VALUE_SETTING_ID))
+        except ValueError:
+            self._sync = -1
+            return
+
+        if x < 0 or x > 10:
+            self._sync = -1
+            return
+
+        item['rating'] = x
+
+        # Sync rating
+        with BusyDialog():
+            self._sync = self._trakt.post_response(
+                'sync',
+                'ratings/remove' if x == 0 else 'ratings',
+                postdata={f'{self._item.trakt_type}s': [item]}
+            )
+        return self._sync     
+
+class _Reset():
+    def __init__(self, item, **kwargs):
+        self._item, self._trakt = item, item._trakt
+        set_kwargattr(self, kwargs)
+
+    def _getself(self):
+        """ Method to see if we should return item in menu or not """
+        rating = self._trakt.is_sync(
+            self._item.trakt_type, self._item.unique_id, self._item.season, self._item.episode,
+            self._item.id_type, 'ratings')
+
+        if not rating:
+            self.name = get_localized(32509)
+        else:
+            self.name = f'{get_localized(32509)} ({rating.get("rating")})'
+
+        return self
+        
+    def sync(self):
+        # Get base item definition from Trakt
+        with BusyDialog():
+            item = self._trakt.get_sync_item(
+                self._item.trakt_type, self._item.unique_id, self._item.id_type,
+                self._item.season, self._item.episode)
+        if not item:
+            return
+        # Ask user for rating
+        try:
+            x = 0
+        except ValueError:
+            self._sync = -1
+            return
+
+        if x < 0 or x > 10:
+            self._sync = -1
+            return
+
+        item['rating'] = x
+
+        # Sync rating
+        with BusyDialog():
+            self._sync = self._trakt.post_response(
+                'sync',
+                'ratings/remove' if x == 0 else 'ratings',
+                postdata={f'{self._item.trakt_type}s': [item]}
+            )
+        return self._sync        
