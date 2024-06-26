@@ -2591,6 +2591,11 @@ msgctxt "#32509"
 msgid "Use alternative TMDb API url"
 msgstr ""
 
+#: /resources/tmdbhelper/lib/script/sync.py
+msgctxt "#32510"
+msgid "Remove rating"
+msgstr ""
+
 msgctxt "#30030"
 msgid "Hindi (India)"
 msgstr ""
