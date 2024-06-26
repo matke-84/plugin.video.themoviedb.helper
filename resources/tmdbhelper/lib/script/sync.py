@@ -521,9 +521,9 @@ class _Reset():
             self._item.id_type, 'ratings')
 
         if not rating:
-            self.name = get_localized(32509)
+            self.name = get_localized(32510)
         else:
-            self.name = f'{get_localized(32509)} ({rating.get("rating")})'
+            self.name = f'{get_localized(32510)} ({rating.get("rating")})'
 
         return self
         
