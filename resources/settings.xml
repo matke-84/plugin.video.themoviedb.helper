@@ -5,7 +5,7 @@
             <group id="1" label="248">
                 <setting id="mpaa_prefix" type="string" label="32004" help="32418">
                     <level>0</level>
-                    <default>Rated</default>
+                    <default></default>
                     <constraints>
                         <allowempty>true</allowempty>
                     </constraints>
@@ -101,19 +101,19 @@
             <group id="2" label="32367">
                 <setting id="local_db" type="boolean" label="32038" help="">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
             </group>
             <group id="3" label="32401">
                 <setting id="tmdb_details" type="boolean" label="32402" help="">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="artwork_quality" type="integer" label="32420" help="">
                     <level>0</level>
-                    <default>0</default>
+                    <default>2</default>
                     <constraints>
                         <options>
                             <option label="32397">0</option>
@@ -143,12 +143,12 @@
             <group id="2" label="32090">
                 <setting id="hide_unaired_movies" type="boolean" label="32073" help="">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="hide_unaired_episodes" type="boolean" label="32084" help="">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="nodate_is_unaired" type="boolean" label="32366" help="">
@@ -166,7 +166,7 @@
                 </setting>
                 <setting id="special_folders" type="integer" label="32091" help="">
                     <level>0</level>
-                    <default>0</default>
+                    <default>7</default>
                     <constraints>
                         <options>
                             <option label="32378">0</option>
@@ -449,17 +449,17 @@
                 </setting>
                 <setting id="fanarttv_lookup" type="boolean" label="32021" help="" parent="fanarttv_clientkey">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="widget_fanarttv_lookup" type="boolean" label="32028" help="" parent="fanarttv_clientkey">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="service_fanarttv_lookup" type="boolean" label="32163" help="" parent="fanarttv_clientkey">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="fanarttv_clientkey_access" type="boolean" label="32483" help="" parent="fanarttv_clientkey">
@@ -471,7 +471,7 @@
                 </setting>
                 <setting id="fanarttv_secondpref" type="boolean" label="32408" help="">
                     <level>0</level>
-                    <default>false</default>
+                    <default>true</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="fanarttv_enfallback" type="boolean" label="32399" help="">
@@ -723,7 +723,7 @@
             <group id="2" label="32499">
                 <setting id="pagemulti_library" type="integer" label="32503" help="">
                     <level>0</level>
-                    <default>2</default>
+                    <default>1</default>
                     <constraints>
                         <minimum>1</minimum>
                         <step>1</step>
@@ -851,7 +851,7 @@
             <group id="5" label="25000">
                 <setting id="startup_notifications" type="boolean" label="32468" help="">
                     <level>0</level>
-                    <default>True</default>
+                    <default>False</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="sync_notifications" type="boolean" label="32534" help="">

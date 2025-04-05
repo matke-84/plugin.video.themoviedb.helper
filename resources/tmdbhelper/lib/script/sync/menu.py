@@ -1,7 +1,7 @@
 from functools import cached_property
 from tmdbhelper.lib.addon.dialog import BusyDialog
 from tmdbhelper.lib.script.sync.basic import ItemWatched, ItemUnwatched, ItemWatchlist, ItemCollection, ItemFavorites
-from tmdbhelper.lib.script.sync.rating import ItemRating
+from tmdbhelper.lib.script.sync.rating import ItemRating, ItemLike, ItemDislike, ItemReset
 from tmdbhelper.lib.script.sync.comments import ItemComments
 from tmdbhelper.lib.script.sync.userlist import ItemUserList, ItemMDbList
 from tmdbhelper.lib.script.sync.progress import ItemProgress
@@ -55,6 +55,12 @@ class Menu(MenuAttributes):
         'rating': ItemRating,
     }
 
+    rating_items = {
+        'like': ItemLike,
+        'dislike': ItemDislike,
+        'reset': ItemReset,
+    }
+
     def __init__(self, tmdb_type, tmdb_id, season=None, episode=None):
         self.tmdb_type = tmdb_type
         self.tmdb_id = tmdb_id
@@ -70,7 +76,13 @@ class Menu(MenuAttributes):
 
     def select(self, sync_type=None):
         if sync_type:
-            self.items = {sync_type: self.items[sync_type]}
+            cls = self.rating_items.get(sync_type)
+            if not cls:
+                return
+            item = cls(self.tmdb_type, self.tmdb_id, self.season, self.episode).get_self()
+            if item:
+                item.sync()
+            return
         x = self.choose()
         if x == -1:
             return
