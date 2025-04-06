@@ -7,8 +7,6 @@ from xbmcgui import Dialog
 class ItemComments(ItemSync):
     localized_name = 32304
     preconfigured = True
-    allow_episodes = True
-    allow_seasons = True
 
     def get_trakt_type(self):
         if self.tmdb_type == 'movie':
@@ -32,6 +30,6 @@ class ItemComments(ItemSync):
 
     def sync(self):
         with BusyDialog():
-            comments = self.trakt_api.get_response_json(f'{self.trakt_type}s', self.slug, 'comments', limit=50) or []
+            comments = self.trakt_api.get_response_json(f'{self.trakt_type}s', self.trakt_id, 'comments', limit=50) or []
             itemlist = [i.get('comment', '').replace('\n', ' ') for i in comments]
         self.select_comment(itemlist, comments)
