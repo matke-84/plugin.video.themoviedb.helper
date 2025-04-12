@@ -76,7 +76,7 @@ class Menu(MenuAttributes):
 
     def select(self, sync_type=None):
         if sync_type:
-            cls = self.rating_items.get(sync_type)
+            cls = self.items.get(sync_type) or self.rating_items.get(sync_type)
             if not cls:
                 return
             item = cls(self.tmdb_type, self.tmdb_id, self.season, self.episode).get_self()
