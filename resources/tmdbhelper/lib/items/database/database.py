@@ -15,6 +15,7 @@ class ItemDetailsDataBase(DataBase):
         },
         'expiry': {
             'data': 'INTEGER',
+            'indexed': True
         },
     }
 
@@ -28,9 +29,6 @@ class ItemDetailsDataBase(DataBase):
         },
         'year': {
             'data': 'INTEGER',
-        },
-        'mpaa': {
-            'data': 'TEXT',
         },
         'plot': {
             'data': 'TEXT',
@@ -68,9 +66,6 @@ class ItemDetailsDataBase(DataBase):
         },
         'year': {
             'data': 'INTEGER',
-        },
-        'mpaa': {
-            'data': 'TEXT',
         },
         'plot': {
             'data': 'TEXT',
@@ -278,6 +273,37 @@ class ItemDetailsDataBase(DataBase):
         },
     }
 
+    certification_columns = {
+        'name': {
+            'data': 'TEXT',
+        },
+        'iso_country': {
+            'data': 'TEXT',
+            'unique': True,
+            'indexed': True,
+        },
+        'iso_language': {
+            'data': 'TEXT',
+            'unique': True
+        },
+        'release_date': {
+            'data': 'TEXT',
+            'unique': True,
+            'indexed': True,
+        },
+        'release_type': {
+            'data': 'TEXT',
+            'unique': True,
+            'indexed': True,
+        },
+        'parent_id': {
+            'data': 'TEXT',
+            'foreign_key': 'baseitem(id)',
+            'indexed': True,
+            'unique': True
+        },
+    }
+
     genre_columns = {
         'name': {
             'data': 'TEXT',
@@ -311,18 +337,10 @@ class ItemDetailsDataBase(DataBase):
     }
 
     studio_columns = {
-        'name': {
-            'data': 'TEXT',
-        },
         'tmdb_id': {
             'data': 'INTEGER',
-            'unique': True
-        },
-        'icon': {
-            'data': 'TEXT',
-        },
-        'country': {
-            'data': 'TEXT',
+            'unique': True,
+            'foreign_key': 'company(tmdb_id)',
         },
         'parent_id': {
             'data': 'TEXT',
@@ -333,24 +351,32 @@ class ItemDetailsDataBase(DataBase):
     }
 
     network_columns = {
-        'name': {
-            'data': 'TEXT',
-        },
         'tmdb_id': {
             'data': 'INTEGER',
-            'unique': True
-        },
-        'icon': {
-            'data': 'TEXT',
-        },
-        'country': {
-            'data': 'TEXT',
+            'unique': True,
+            'foreign_key': 'company(tmdb_id)',
         },
         'parent_id': {
             'data': 'TEXT',
             'foreign_key': 'baseitem(id)',
             'indexed': True,
             'unique': True
+        },
+    }
+
+    company_columns = {
+        'tmdb_id': {
+            'data': 'INTEGER PRIMARY KEY',
+            'indexed': True
+        },
+        'name': {
+            'data': 'TEXT',
+        },
+        'logo': {
+            'data': 'TEXT',
+        },
+        'country': {
+            'data': 'TEXT',
         },
     }
 
@@ -366,9 +392,6 @@ class ItemDetailsDataBase(DataBase):
         },
         'department': {
             'data': 'TEXT',
-        },
-        'ordering': {
-            'data': 'INTEGER',
         },
         'parent_id': {
             'data': 'TEXT',
@@ -414,21 +437,10 @@ class ItemDetailsDataBase(DataBase):
     }
 
     provider_columns = {
-        'name': {
-            'data': 'TEXT',
-        },
         'tmdb_id': {
             'data': 'INTEGER',
+            'foreign_key': 'service(tmdb_id)',
             'unique': True
-        },
-        'display_priority': {
-            'data': 'INTEGER',
-        },
-        'iso': {
-            'data': 'TEXT',
-        },
-        'logo': {
-            'data': 'TEXT',
         },
         'availability': {
             'data': 'TEXT',
@@ -441,12 +453,57 @@ class ItemDetailsDataBase(DataBase):
         },
     }
 
-    artwork_columns = {
-        'key': {
+    service_columns = {
+        'tmdb_id': {
+            'data': 'INTEGER PRIMARY KEY',
+            'indexed': True
+        },
+        'display_priority': {
+            'data': 'INTEGER',
+        },
+        'name': {
             'data': 'TEXT',
         },
-        'value': {
+        'iso': {
             'data': 'TEXT',
+        },
+        'logo': {
+            'data': 'TEXT',
+        },
+    }
+
+    art_columns = {
+        'aspect_ratio': {
+            'data': 'TEXT',
+            'indexed': True
+        },
+        'height': {
+            'data': 'INTEGER',
+        },
+        'width': {
+            'data': 'INTEGER',
+        },
+        'iso': {
+            'data': 'TEXT',
+            'indexed': True
+        },
+        'icon': {
+            'data': 'TEXT',
+        },
+        'type': {
+            'data': 'TEXT',
+            'indexed': True
+        },
+        'extension': {
+            'data': 'TEXT',
+            'indexed': True
+        },
+        'vote_average': {
+            'data': 'INTEGER',
+            'indexed': True
+        },
+        'vote_count': {
+            'data': 'INTEGER',
         },
         'parent_id': {
             'data': 'TEXT',
@@ -483,11 +540,14 @@ class ItemDetailsDataBase(DataBase):
             'country': self.country_columns,
             'studio': self.studio_columns,
             'network': self.network_columns,
+            'company': self.company_columns,
+            'certification': self.certification_columns,
             'crewmember': self.crewmember_columns,
             'castmember': self.castmember_columns,
             'provider': self.provider_columns,
+            'service': self.service_columns,
             'custom': self.custom_columns,
-            'artwork': self.artwork_columns,
+            'art': self.art_columns,
             'unique_id': self.unique_id_columns,
         }
 
@@ -497,7 +557,7 @@ class ItemDetailsDataBase(DataBase):
             return [f'{k} {v["data"]}' for k, v in columns.items()]
 
         def create_column_fkey(columns):
-            return [f'FOREIGN KEY({k}) REFERENCES {v["foreign_key"]}' for k, v in columns.items() if 'foreign_key' in v]
+            return [f'FOREIGN KEY({k}) REFERENCES {v["foreign_key"]} ON DELETE CASCADE' for k, v in columns.items() if 'foreign_key' in v]
 
         def create_column_uids(columns):
             keys = [k for k, v in columns.items() if v.get('unique')]
