@@ -45,15 +45,12 @@ class ItemDetailsDataBase(DataBase):
         'tagline': {
             'data': 'TEXT',
         },
-        'status': {
-            'data': 'TEXT',
-        },
         'premiered': {
             'data': 'TEXT',
         },
-        'trailer': {
+        'status': {
             'data': 'TEXT',
-        }
+        },
     }
 
     tvshow_columns = {
@@ -82,15 +79,12 @@ class ItemDetailsDataBase(DataBase):
         'tagline': {
             'data': 'TEXT',
         },
-        'status': {
-            'data': 'TEXT',
-        },
         'premiered': {
             'data': 'TEXT',
         },
-        'trailer': {
+        'status': {
             'data': 'TEXT',
-        }
+        },
     }
 
     season_columns = {
@@ -114,6 +108,9 @@ class ItemDetailsDataBase(DataBase):
             'data': 'TEXT',
         },
         'premiered': {
+            'data': 'TEXT',
+        },
+        'status': {
             'data': 'TEXT',
         },
         'tvshow_id': {
@@ -149,6 +146,9 @@ class ItemDetailsDataBase(DataBase):
         'duration': {
             'data': 'INTEGER',
         },
+        'status': {
+            'data': 'TEXT',
+        },
         'season_id': {
             'data': 'TEXT',
             'foreign_key': 'season(id)',
@@ -162,7 +162,7 @@ class ItemDetailsDataBase(DataBase):
     }
 
     ratings_columns = {
-        'id': {
+        'parent_id': {
             'data': 'TEXT PRIMARY KEY',
             'foreign_key': 'baseitem(id)',
         },
@@ -304,6 +304,36 @@ class ItemDetailsDataBase(DataBase):
         },
     }
 
+    video_columns = {
+        'name': {
+            'data': 'TEXT',
+        },
+        'iso_country': {
+            'data': 'TEXT',
+            'indexed': True,
+        },
+        'iso_language': {
+            'data': 'TEXT',
+            'indexed': True,
+        },
+        'release_date': {
+            'data': 'TEXT',
+            'indexed': True,
+        },
+        'path': {
+            'data': 'TEXT',
+        },
+        'content': {
+            'data': 'TEXT',
+            'indexed': True,
+        },
+        'parent_id': {
+            'data': 'TEXT',
+            'foreign_key': 'baseitem(id)',
+            'indexed': True,
+        },
+    }
+
     genre_columns = {
         'name': {
             'data': 'TEXT',
@@ -324,7 +354,7 @@ class ItemDetailsDataBase(DataBase):
         'name': {
             'data': 'TEXT',
         },
-        'iso': {
+        'iso_country': {
             'data': 'TEXT',
             'unique': True
         },
@@ -464,7 +494,7 @@ class ItemDetailsDataBase(DataBase):
         'name': {
             'data': 'TEXT',
         },
-        'iso': {
+        'iso_country': {
             'data': 'TEXT',
         },
         'logo': {
@@ -483,7 +513,7 @@ class ItemDetailsDataBase(DataBase):
         'width': {
             'data': 'INTEGER',
         },
-        'iso': {
+        'iso_language': {
             'data': 'TEXT',
             'indexed': True
         },
@@ -541,6 +571,7 @@ class ItemDetailsDataBase(DataBase):
             'studio': self.studio_columns,
             'network': self.network_columns,
             'company': self.company_columns,
+            'video': self.video_columns,
             'certification': self.certification_columns,
             'crewmember': self.crewmember_columns,
             'castmember': self.castmember_columns,

@@ -370,7 +370,7 @@ class ContainerDirectoryItemDetails(ContainerDirectoryCommon):
     @cached_property
     def lidc(self):
         from tmdbhelper.lib.items.database.listitem import ListItemDetailsConfigurator
-        lidc = ListItemDetailsConfigurator(tmdb_api=self.tmdb_api)
+        lidc = ListItemDetailsConfigurator(tmdb_api=self.tmdb_api, trakt_api=self.trakt_api)
         lidc.pagination = self.pagination
         return lidc
 
@@ -380,8 +380,9 @@ class ContainerDirectoryItemDetails(ContainerDirectoryCommon):
         return li
 
     def build_detailed_items(self, items):
-        items = self.lidc.configure_listitems_threaded(items)
-        return [i for i in (self.build_detailed_item(li) for li in items if li) if i]
+        with TimerList(self.timer_lists, '--build', log_threshold=0.05, logging=self.log_timers):
+            items = self.lidc.configure_listitems_threaded(items)
+            return [i for i in (self.build_detailed_item(li) for li in items if li) if i]
 
 
 ContainerDirectory = ContainerDirectoryItemBuilder
