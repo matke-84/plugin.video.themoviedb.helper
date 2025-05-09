@@ -597,7 +597,7 @@
                 </setting>
                 <setting id="trakt_episodetypes" type="boolean" label="32533" help="">
                     <level>0</level>
-                    <default>true</default>
+                    <default>false</default>
                     <control type="toggle"/>
                 </setting>
                 <setting id="trakt_watchedindicators" type="boolean" label="32034" help="">
